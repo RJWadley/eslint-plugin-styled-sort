@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "generator-eslint": "^4.0.0"
+  }
+}
