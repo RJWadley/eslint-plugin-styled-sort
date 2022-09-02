@@ -125,9 +125,9 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
               // move nodeToMove until it is after nodeToReference
               return fixer.replaceTextRange(
                 [nodeToMove.range[0], nodeToReference.range[1]],
-                sourceCode.getText(nodeToReference) +
+                textBetweenNodes +
                   "\n" +
-                  textBetweenNodes +
+                  sourceCode.getText(nodeToReference) +
                   "\n" +
                   sourceCode.getText(nodeToMove)
               );
