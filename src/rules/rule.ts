@@ -66,8 +66,20 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
 
       // determine the order the variables appear in the source, excluding their definitions
       let desiredOrder = variableNames.sort((a, b) => {
-        let aIndex = sourceCode.getText().indexOf("<" + a);
-        let bIndex = sourceCode.getText().indexOf("<" + b);
+        let aIndex1 = sourceCode.getText().indexOf("<" + a + ">");
+        let bIndex1 = sourceCode.getText().indexOf("<" + b + ">");
+        let aIndex2 = sourceCode.getText().indexOf("<" + a + " ");
+        let bIndex2 = sourceCode.getText().indexOf("<" + b + " ");
+
+        if (aIndex1 === -1) aIndex1 = Infinity;
+        if (bIndex1 === -1) bIndex1 = Infinity;
+        if (aIndex2 === -1) aIndex2 = Infinity;
+        if (bIndex2 === -1) bIndex2 = Infinity;
+
+        let aIndex = Math.min(aIndex1, aIndex2);
+        let bIndex = Math.min(bIndex1, bIndex2);
+
+        if (aIndex === bIndex) return 0;
         return aIndex > bIndex ? 1 : -1;
       });
 
