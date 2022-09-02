@@ -126,9 +126,9 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
               return fixer.replaceTextRange(
                 [nodeToMove.range[0], nodeToReference.range[1]],
                 textBetweenNodes +
-                  "\n" +
+                  "\n\n" +
                   sourceCode.getText(nodeToReference) +
-                  "\n" +
+                  "\n\n" +
                   sourceCode.getText(nodeToMove)
               );
             },
