@@ -109,8 +109,10 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
       // check if the variables are in the correct order
       desiredOrder.forEach((variable, index) => {
         if (variablePositions[variable] < index) {
+          let nodeToReportAt = variableAST[variable].declarations[0].id;
+
           context.report({
-            node: variableAST[variable],
+            node: nodeToReportAt,
             message: `Declaration of ${variable} should be after ${
               desiredOrder[index - 1]
             }`,
