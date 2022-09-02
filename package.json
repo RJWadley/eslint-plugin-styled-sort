@@ -1,5 +1,21 @@
 {
+  "name": "eslint-plugin-sort-styled-components",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "files": [
+    "dist/**"
+  ],
   "dependencies": {
-    "generator-eslint": "^4.0.0"
+    "eslint": "^8.23.0"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --no-splitting --minify"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.4.6",
+    "@types/estree": "^1.0.0",
+    "@types/node": "^18.7.14",
+    "tsup": "^6.2.3",
+    "typescript": "^4.8.2"
   }
 }
