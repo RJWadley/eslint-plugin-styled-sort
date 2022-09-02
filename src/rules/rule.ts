@@ -70,14 +70,18 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
         let bIndex1 = sourceCode.getText().indexOf("<" + b + ">");
         let aIndex2 = sourceCode.getText().indexOf("<" + a + " ");
         let bIndex2 = sourceCode.getText().indexOf("<" + b + " ");
+        let aIndex3 = sourceCode.getText().indexOf("<" + a + "\n");
+        let bIndex3 = sourceCode.getText().indexOf("<" + b + "\n");
 
         if (aIndex1 === -1) aIndex1 = Infinity;
         if (bIndex1 === -1) bIndex1 = Infinity;
         if (aIndex2 === -1) aIndex2 = Infinity;
         if (bIndex2 === -1) bIndex2 = Infinity;
+        if (aIndex3 === -1) aIndex3 = Infinity;
+        if (bIndex3 === -1) bIndex3 = Infinity;
 
-        let aIndex = Math.min(aIndex1, aIndex2);
-        let bIndex = Math.min(bIndex1, bIndex2);
+        let aIndex = Math.min(aIndex1, aIndex2, aIndex3);
+        let bIndex = Math.min(bIndex1, bIndex2, bIndex3);
 
         if (aIndex === bIndex) return 0;
         return aIndex > bIndex ? 1 : -1;
