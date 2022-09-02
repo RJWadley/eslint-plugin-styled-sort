@@ -92,7 +92,6 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
       while (lastOrder !== desiredOrder.join(", ")) {
         lastOrder = desiredOrder.join(", ");
         adjustOrder();
-        console.log(desiredOrder.join(", "));
       }
 
       // check if the variables are in the correct order
@@ -110,8 +109,6 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
               const textBetweenNodes = sourceCode
                 .getText()
                 .slice(nodeToMove.range[1], nodeToReference.range[0] - 1);
-
-              console.log(textBetweenNodes);
 
               // move nodeToMove until it is after nodeToReference
               return fixer.replaceTextRange(
