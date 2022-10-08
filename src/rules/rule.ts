@@ -18,6 +18,7 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
       allVariableDeclarations = allVariableDeclarations.filter((node) => {
         let init = node.declarations[0].init;
         return (
+          init &&
           "tag" in init &&
           (("callee" in init.tag &&
             "name" in init.tag.callee &&
@@ -39,7 +40,11 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
 
         // get all the dependencies of the variable
         variableDeclaration.declarations.forEach((declaration) => {
-          if ("tag" in declaration.init && "arguments" in declaration.init.tag)
+          if (
+            declaration.init &&
+            "tag" in declaration.init &&
+            "arguments" in declaration.init.tag
+          )
             declaration.init.tag.arguments.forEach((argument) => {
               if ("name" in argument) {
                 if (!dependencies[nameOfVariable]) {
