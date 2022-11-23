@@ -49,20 +49,20 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
           )
             declaration.init.tag.arguments.forEach((argument) => {
               if ("name" in argument) {
-                if (!dependencies[nameOfVariable]) {
-                  dependencies[nameOfVariable] = [];
+                if (!dependencies[argument.name]) {
+                  dependencies[argument.name] = [];
                 }
-                dependencies[nameOfVariable].push(argument.name);
+                dependencies[argument.name].push(nameOfVariable);
               }
             });
 
           if ("quasi" in declaration.init)
             declaration.init.quasi.expressions.forEach((expression) => {
               if ("name" in expression) {
-                if (!dependencies[nameOfVariable]) {
-                  dependencies[nameOfVariable] = [];
+                if (!dependencies[expression.name]) {
+                  dependencies[expression.name] = [];
                 }
-                dependencies[nameOfVariable].push(expression.name);
+                dependencies[expression.name].push(nameOfVariable);
               }
             });
         });
@@ -72,7 +72,7 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
       const sourceCode = context.getSourceCode();
 
       // determine the order the variables appear in the source, excluding their definitions
-      let desiredOrder = variableNames.sort((a, b) => {
+      let desiredOrder = variableNames.sort().sort((a, b) => {
         let aIndex1 = sourceCode.getText().indexOf("<" + a + ">");
         let bIndex1 = sourceCode.getText().indexOf("<" + b + ">");
         let aIndex2 = sourceCode.getText().indexOf("<" + a + " ");
@@ -94,19 +94,22 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
         return aIndex > bIndex ? 1 : -1;
       });
 
-      // determine if any variables appear before their dependencies
-      // if so, shift them down the array until they are after their dependencies
+      // determine if any variables appear after their dependencies
+      // if so, shift them up the array until they are before their dependencies
       const adjustOrder = () => {
         desiredOrder.forEach((variable, index) => {
           if (!dependencies[variable]) return;
-
+          let smallestDependencyIndex = Infinity;
           dependencies[variable].forEach((dependency) => {
             let dependencyIndex = desiredOrder.indexOf(dependency);
-            if (dependencyIndex > index) {
-              desiredOrder.splice(index, 1);
-              desiredOrder.splice(dependencyIndex, 0, variable);
-            }
+            if (dependencyIndex < smallestDependencyIndex)
+              smallestDependencyIndex = dependencyIndex;
           });
+          if (smallestDependencyIndex < index) {
+            console.log("Moving " + variable + " up");
+            desiredOrder.splice(index, 1);
+            desiredOrder.splice(smallestDependencyIndex, 0, variable);
+          }
         });
       };
 
@@ -114,6 +117,7 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
       let lastOrder = "";
       while (lastOrder !== desiredOrder.join(", ")) {
         lastOrder = desiredOrder.join(", ");
+        console.log("Last order: " + lastOrder);
         adjustOrder();
       }
 
