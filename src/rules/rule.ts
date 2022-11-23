@@ -106,7 +106,6 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
               smallestDependencyIndex = dependencyIndex;
           });
           if (smallestDependencyIndex < index) {
-            console.log("Moving " + variable + " up");
             desiredOrder.splice(index, 1);
             desiredOrder.splice(smallestDependencyIndex, 0, variable);
           }
@@ -117,7 +116,6 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
       let lastOrder = "";
       while (lastOrder !== desiredOrder.join(", ")) {
         lastOrder = desiredOrder.join(", ");
-        console.log("Last order: " + lastOrder);
         adjustOrder();
       }
 
