@@ -1,5 +1,5 @@
 import { Rule } from "eslint";
-import { Directive, VariableDeclaration } from "estree";
+import { Expression, SpreadElement, VariableDeclaration } from "estree";
 
 export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
   return {
@@ -56,15 +56,26 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
               }
             });
 
-          if ("quasi" in declaration.init)
-            declaration.init.quasi.expressions.forEach((expression) => {
-              if ("name" in expression) {
-                if (!dependencies[expression.name]) {
-                  dependencies[expression.name] = [];
+          const findDeps = (node: Expression | SpreadElement) => {
+            if ("quasi" in node) {
+              node.quasi.expressions.forEach((expression) => {
+                if ("name" in expression) {
+                  if (!dependencies[expression.name]) {
+                    dependencies[expression.name] = [];
+                  }
+                  dependencies[expression.name].push(nameOfVariable);
+                } else {
+                  findDeps(expression);
                 }
-                dependencies[expression.name].push(nameOfVariable);
-              }
-            });
+              });
+            } else if ("arguments" in node) {
+              node.arguments.forEach((argument) => {
+                findDeps(argument);
+              });
+            }
+          };
+
+          findDeps(declaration.init);
         });
       });
 
