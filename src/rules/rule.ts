@@ -18,16 +18,14 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
       allVariableDeclarations = allVariableDeclarations.filter((node) => {
         let init = node.declarations[0].init;
         return (
-          init &&
-          "tag" in init &&
-          (("callee" in init.tag &&
-            "name" in init.tag.callee &&
-            (init.tag.callee.name === "styled" ||
-              init.tag.callee.name === "css")) ||
-            ("object" in init.tag &&
-              "name" in init.tag.object &&
-              (init.tag.object.name === "styled" ||
-                init.tag.object.name === "css")))
+          // @ts-expect-error we lazy
+          init?.tag?.callee?.name === "styled" ||
+          // @ts-expect-error we lazy
+          init?.tag?.object?.name === "styled" ||
+          // @ts-expect-error we lazy
+          init?.tag?.callee?.object?.object?.name === "styled" ||
+          // @ts-expect-error we lazy
+          init?.tag?.name === "css"
         );
       });
 
