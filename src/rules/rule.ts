@@ -25,7 +25,9 @@ export function formatStyled(context: Rule.RuleContext): Rule.RuleListener {
           // @ts-expect-error we lazy
           init?.tag?.callee?.object?.object?.name === "styled" ||
           // @ts-expect-error we lazy
-          init?.tag?.name === "css"
+          init?.tag?.name === "css" ||
+          // @ts-expect-error we lazy
+          init?.tag?.name === "keyframes"
         );
       });
 
